@@ -1,6 +1,9 @@
 # TableViewSwipe
 TableViewの各Cellにスワイプの機能を追加する。
 
+
+![demo](https://cloud.githubusercontent.com/assets/4962215/11019848/f2b60a44-864f-11e5-91d5-88e3d1f0ae3e.gif)
+
 ## Installation
 
 Podfileに下記を追加する（未対応）
