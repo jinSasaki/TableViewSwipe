@@ -156,6 +156,8 @@ internal class SwipeController: NSObject, UIGestureRecognizerDelegate {
     internal static let sharedController = SwipeController()
     /// The target table view to swipe
     internal weak var tableView: UITableView?
+    /// The index path of target table view cell to swipe
+    internal weak var indexPath: NSIndexPath?
     /// A view under the swiped cell
     internal weak var swipeMenuView: UIView?
     /// A label under the swiped cell
@@ -231,12 +233,13 @@ public extension UITableView {
         let translation = panGestureRecognizer.translationInView(self)
         
         let location = panGestureRecognizer.locationInView(self)
-        guard let indexPath = self.indexPathForRowAtPoint(location),
+        guard var indexPath = self.indexPathForRowAtPoint(location),
             let cell = self.cellForRowAtIndexPath(indexPath) else {
                 return
         }
         
         let swipeController = SwipeController.sharedController
+        indexPath = swipeController.indexPath ?? indexPath
         var swipeCell = swipeController.swipeCell
         if swipeCell == nil {
             swipeCell = cell
@@ -259,6 +262,7 @@ public extension UITableView {
             swipeController.swipeMenuLabel = swipeController.delegate?.swipe(direction, titleLabel: swipeController.swipeMenuLabel!, atIndexPath: indexPath, active: false)
             self.swipeViewsHidden(false)
             swipeController.delegate?.swipe?(direction, didBeginAtIndexPath: indexPath)
+            swipeController.indexPath = indexPath
         case .Changed:
             let active = swipeController.delegate?.swipe(direction, acitiveWithRate: rate) ?? false
             swipeController.swipeMenuView?.backgroundColor = swipeController.delegate?.swipe(direction, backgroundColorAtIndexPath: indexPath, active: active)
@@ -289,6 +293,7 @@ public extension UITableView {
                         swipeController.swipeCell = nil
                         self.swipeViewsHidden(true)
                         swipeController.delegate?.swipe?(direction, didEndAtIndexPath: indexPath, active: active)
+                        swipeController.indexPath = nil
                 })
             } else {
                 // Return origin position
@@ -302,6 +307,7 @@ public extension UITableView {
                         swipeController.swipeCell = nil
                         self.swipeViewsHidden(true)
                         swipeController.delegate?.swipe?(direction, didEndAtIndexPath: indexPath, active: active)
+                        swipeController.indexPath = nil
                 })
             }
             break
