@@ -49,5 +49,25 @@ extension ViewController: SwipeDelegate {
     func swipe(direction: SwipeDirection, shouldBeginAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
+    
+    func swipe(direction: SwipeDirection, willBeginAtIndexPath indexPath: NSIndexPath) {
+        print("willBeginAtIndexPath: (\(indexPath.section), \(indexPath.row))")
+    }
+    
+    func swipe(direction: SwipeDirection, didBeginAtIndexPath indexPath: NSIndexPath) {
+        print("didBeginAtIndexPath: (\(indexPath.section), \(indexPath.row))")
+    }
+    
+    func swipe(direction: SwipeDirection, didSwipeAtIndexPath indexPath: NSIndexPath, rate: CGFloat) {
+        print("didSwipeAtIndexPath: (\(indexPath.section), \(indexPath.row)), rate: \(rate)")
+    }
+    
+    func swipe(direction: SwipeDirection, willEndAtIndexPath indexPath: NSIndexPath, active: Bool) {
+        print("willBeginAtIndexPath: (\(indexPath.section), \(indexPath.row)), active: " + (active ? "true" : "false"))
+    }
+    
+    func swipe(direction: SwipeDirection, didEndAtIndexPath indexPath: NSIndexPath, active: Bool) {
+        print("didEndAtIndexPath: (\(indexPath.section), \(indexPath.row)), active: " + (active ? "true" : "false"))
+    }
 }
 
