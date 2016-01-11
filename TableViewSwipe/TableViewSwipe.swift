@@ -272,9 +272,15 @@ public extension UITableView {
         case .Cancelled, .Ended:
             let active = swipeController.delegate?.swipe(direction, acitiveWithRate: rate) ?? false
             swipeController.delegate?.swipe?(direction, willEndAtIndexPath: indexPath, active: active)
+            var velocity = panGestureRecognizer.velocityInView(self).x
+            let width = self.frame.width
+            velocity = velocity > width ? width : (velocity < -width) ? -width : velocity
+            let fastestDuration: CGFloat = 0.1
+            let latestDuration: CGFloat = 0.5
+            let duration = Double(latestDuration + fastestDuration) - Double(fabs(velocity / width) * (latestDuration - fastestDuration))
             if active {
                 // Swipe out
-                UIView.animateWithDuration(0.2,
+                UIView.animateWithDuration(duration,
                     delay: 0,
                     options: .CurveEaseInOut,
                     animations: { () -> Void in
