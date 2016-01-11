@@ -93,17 +93,20 @@ public extension UITableView {
     
     public func swipeEnabled(enabled: Bool) {
         let swipeController = SwipeController.sharedController
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "handlePanGesture:")
         if enabled {
+            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "handlePanGesture:")
             panGestureRecognizer.delegate = swipeController
             self.panGestureRecognizer.requireGestureRecognizerToFail(panGestureRecognizer)
             self.addGestureRecognizer(panGestureRecognizer)
             swipeController.tableView = self
             self.setupSwipeViews()
         } else {
-            panGestureRecognizer.delegate = nil
-            self.removeGestureRecognizer(panGestureRecognizer)
+            if let panGestureRecognizer = swipeController.panGestureRecognizer {
+                swipeController.panGestureRecognizer?.delegate = nil
+                self.removeGestureRecognizer(panGestureRecognizer)
+            }
             swipeController.tableView = nil
+            swipeController.panGestureRecognizer = nil
             self.removeSwipeViews()
         }
     }
@@ -164,6 +167,8 @@ internal class SwipeController: NSObject, UIGestureRecognizerDelegate {
     internal weak var swipeMenuLabel: UILabel?
     /// The swiped cell
     internal weak var swipeCell: UITableViewCell!
+    /// The pan gesture recognizer of tableView
+    internal weak var panGestureRecognizer: UIPanGestureRecognizer?
     /// Swipe delegate class
     internal weak var delegate: SwipeDelegate?
     
