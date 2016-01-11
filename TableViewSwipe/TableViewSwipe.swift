@@ -86,12 +86,12 @@ import UIKit
 
 public extension UITableView {
     
-    func swipeEnabled(enabled: Bool, delegate: SwipeDelegate?) {
+    public func swipeEnabled(enabled: Bool, delegate: SwipeDelegate?) {
         self.swipeEnabled(enabled)
         self.setSwipeDelegate(delegate)
     }
     
-    func swipeEnabled(enabled: Bool) {
+    public func swipeEnabled(enabled: Bool) {
         let swipeController = SwipeController.sharedController
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "handlePanGesture:")
         if enabled {
@@ -108,7 +108,7 @@ public extension UITableView {
         }
     }
     
-    func setSwipeDelegate(delegate: SwipeDelegate?) {
+    public func setSwipeDelegate(delegate: SwipeDelegate?) {
         SwipeController.sharedController.delegate = delegate
     }
 }
