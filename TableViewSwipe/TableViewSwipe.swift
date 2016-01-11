@@ -254,16 +254,19 @@ public extension UITableView {
         }
         switch state {
         case .Began:
+            swipeController.delegate?.swipe?(direction, willBeginAtIndexPath: indexPath)
             swipeController.swipeMenuView?.backgroundColor = swipeController.delegate?.swipe(direction, backgroundColorAtIndexPath: indexPath, active: false)
             swipeController.swipeMenuLabel = swipeController.delegate?.swipe(direction, titleLabel: swipeController.swipeMenuLabel!, atIndexPath: indexPath, active: false)
             self.swipeViewsHidden(false)
+            swipeController.delegate?.swipe?(direction, didBeginAtIndexPath: indexPath)
         case .Changed:
             let active = swipeController.delegate?.swipe(direction, acitiveWithRate: rate) ?? false
             swipeController.swipeMenuView?.backgroundColor = swipeController.delegate?.swipe(direction, backgroundColorAtIndexPath: indexPath, active: active)
             swipeController.swipeMenuLabel = swipeController.delegate?.swipe(direction, titleLabel: swipeController.swipeMenuLabel!, atIndexPath: indexPath, active: active)
             swipeCell?.transform = CGAffineTransformMakeTranslation(translation.x, 0)
-            
+            swipeController.delegate?.swipe?(direction, atIndexPath: indexPath, rate: rate)
         case .Cancelled, .Ended:
+            swipeController.delegate?.swipe?(direction, willEndAtIndexPath: indexPath)
             if swipeController.delegate?.swipe(direction, acitiveWithRate: rate) ?? false {
                 // Swipe out
                 UIView.animateWithDuration(0.2,
@@ -284,9 +287,10 @@ public extension UITableView {
                         swipeCell?.transform = CGAffineTransformIdentity
                         swipeController.swipeCell = nil
                         self.swipeViewsHidden(true)
+                        swipeController.delegate?.swipe?(direction, didEndAtIndexPath: indexPath)
                 })
             } else {
-                //
+                // Return origin position
                 UIView.animateWithDuration(0.2,
                     delay: 0,
                     options: .CurveEaseInOut,
@@ -296,6 +300,7 @@ public extension UITableView {
                     completion: { (finished: Bool) -> Void in
                         swipeController.swipeCell = nil
                         self.swipeViewsHidden(true)
+                        swipeController.delegate?.swipe?(direction, didEndAtIndexPath: indexPath)
                 })
             }
             break
